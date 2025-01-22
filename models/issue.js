@@ -32,14 +32,20 @@ const issueSchema = new mongoose.Schema({
     },
     created_by: {
         type: String,
-        required: true
+        required: true,
     },
-    assigned_to: {type: String},
+    assigned_to: {
+        type: String,
+        get: (value)=>(value?value:'')
+    },
     open: {
         type: Boolean,
         default: true,
     },
-    status_text: {type:String}
+    status_text: {
+        type:String,
+        get: (value)=>(value?value:'')
+    }
 },options);
 
 issueSchema.virtual('created_on').get(function(){

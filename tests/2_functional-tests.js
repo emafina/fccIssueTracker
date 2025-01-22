@@ -9,6 +9,104 @@ let tempId;
 
 suite('Functional Tests', function() {
   this.timeout(1000);
+
+const preliminariOn = false;
+if(preliminariOn){
+// test preliminari
+// #A
+test('Create an issue with every field: POST request to /api/issues/{project}',function(done){
+    chai
+        .request(server)
+        .keepOpen()
+        .post('/api/issues/preliminari')
+        .send({
+            issue_title: "Test preliminare A",
+            issue_text: "Testo A",
+            created_by: "User01",
+            assigned_to: "Dev01",
+            status_text: "Signaled"
+        })
+        .end(function(err,res){
+            tempId = res.body._id;
+            assert.equal(res.body.issue_title,'Test preliminare A');
+            assert.equal(res.body.issue_text,'Testo A');
+            assert.equal(res.body.created_by,'User01');
+            assert.equal(res.body.assigned_to,'Dev01');
+            assert.equal(res.body.status_text,'Signaled');
+            done();
+        });
+});
+// #B
+test('Create an issue with every field: POST request to /api/issues/{project}',function(done){
+    chai
+        .request(server)
+        .keepOpen()
+        .post('/api/issues/preliminari')
+        .send({
+            issue_title: "Test preliminare B",
+            issue_text: "Testo B",
+            created_by: "User01",
+            assigned_to: "Dev01",
+            status_text: "Signaled"
+        })
+        .end(function(err,res){
+            tempId = res.body._id;
+            assert.equal(res.body.issue_title,'Test preliminare B');
+            assert.equal(res.body.issue_text,'Testo B');
+            assert.equal(res.body.created_by,'User01');
+            assert.equal(res.body.assigned_to,'Dev01');
+            assert.equal(res.body.status_text,'Signaled');
+            done();
+        });
+});
+// #C
+test('Create an issue with every field: POST request to /api/issues/{project}',function(done){
+    chai
+        .request(server)
+        .keepOpen()
+        .post('/api/issues/preliminari')
+        .send({
+            issue_title: "Test preliminare C",
+            issue_text: "Testo C",
+            created_by: "User01",
+            assigned_to: "Dev02",
+            status_text: "Signaled"
+        })
+        .end(function(err,res){
+            tempId = res.body._id;
+            assert.equal(res.body.issue_title,'Test preliminare C');
+            assert.equal(res.body.issue_text,'Testo C');
+            assert.equal(res.body.created_by,'User01');
+            assert.equal(res.body.assigned_to,'Dev02');
+            assert.equal(res.body.status_text,'Signaled');
+            done();
+        });
+});
+// #D
+test('Create an issue with every field: POST request to /api/issues/{project}',function(done){
+    chai
+        .request(server)
+        .keepOpen()
+        .post('/api/issues/preliminari')
+        .send({
+            issue_title: "Test preliminare D",
+            issue_text: "Testo D",
+            created_by: "User01",
+            assigned_to: "Dev02",
+            status_text: "Advanced"
+        })
+        .end(function(err,res){
+            tempId = res.body._id;
+            assert.equal(res.body.issue_title,'Test preliminare D');
+            assert.equal(res.body.issue_text,'Testo D');
+            assert.equal(res.body.created_by,'User01');
+            assert.equal(res.body.assigned_to,'Dev02');
+            assert.equal(res.body.status_text,'Advanced');
+            done();
+        });
+});
+};
+
     // #1
     test('Create an issue with every field: POST request to /api/issues/{project}',function(done){
         chai
@@ -47,11 +145,13 @@ suite('Functional Tests', function() {
                 assert.equal(res.body.issue_title,'Chai test');
                 assert.equal(res.body.issue_text,'Chai test text');
                 assert.equal(res.body.created_by,'Chai');
+                assert.equal(res.body.assigned_to,'');
+                assert.equal(res.body.status_text,'');
                 done();
             });
     });
     // #3
-    test('// Create an issue with missing required fields: POST request to /api/issues/{project}',function(done){
+    test('Create an issue with missing required fields: POST request to /api/issues/{project}',function(done){
         chai
             .request(server)
             .keepOpen()
@@ -70,9 +170,10 @@ suite('Functional Tests', function() {
         chai
             .request(server)
             .keepOpen()
-            .get('/api/issues/test')
+            .get('/api/issues/preliminari')
             .end(function(err,res){
                 assert.isArray(res.body);
+                assert.equal(res.body.length,4)
                 done();
             });
     });
@@ -81,9 +182,10 @@ suite('Functional Tests', function() {
         chai
             .request(server)
             .keepOpen()
-            .get('/api/issues/test?open=true')
+            .get('/api/issues/preliminari?created_by=User01')
             .end(function(err,res){
                 assert.isArray(res.body);
+                assert.equal(res.body.length,4);
                 done();
             });
     });
@@ -92,9 +194,12 @@ suite('Functional Tests', function() {
         chai
             .request(server)
             .keepOpen()
-            .get('/api/issues/test?open=true&created_by=Chai')
+            //.get('/api/issues/preliminari?created_by=User01&assigned_to=Dev01')
+            .get('/api/issues/preliminari?_id=678fecef48477a417266703b&assigned_to=Dev01')
             .end(function(err,res){
+                console.log(res.body)
                 assert.isArray(res.body);
+                assert.equal(res.body.length,1);
                 done();
             });
     });

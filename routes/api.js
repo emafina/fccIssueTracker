@@ -1,7 +1,9 @@
 'use strict';
 
 const Issue = require('../models/issue.js');
-//const {ObjectId} = require('mongodb');
+const {ObjectId} = require('mongodb');
+
+if(!ObjectId){console.log('Error in importing ObjectId')};
 
 module.exports = function (app) {
 
@@ -9,6 +11,7 @@ module.exports = function (app) {
     // -- GET
     .get(async function (req, res) {
       const keys = [
+        '_id',
         'issue_title',
         'issue_text',
         'created_by',
@@ -20,9 +23,18 @@ module.exports = function (app) {
       const query = {project_name:project};
       keys
         .filter(key=>(req.query[key]!=undefined))
-        .forEach(key=>{query[key]=req.query[key]});
+        .forEach(key=>{
+          query[key] = (key==='_id')
+            ? new ObjectId(req.query[key])
+            : req.query[key]
+        });
+
+        console.log('query');
+        console.log(query);
+
       const issues = await Issue.find(query);
-      return res.json(issues);
+      const retIssues = issues.map(issue=>(issue.toJSON()));
+      return res.json(retIssues);
     })
     // -- POST    
     .post(function (req, res) {
@@ -48,7 +60,6 @@ module.exports = function (app) {
           res.json(doc.toJSON());    
         })
         .catch((err)=>{
-          console.log(err);
           res.json({error: 'required field(s) missing'});
         })
       return;
@@ -79,7 +90,6 @@ module.exports = function (app) {
       try {
         requiredIssue = await Issue.findById(req.body._id);  
       } catch (error) {
-        console.log(error);
       }
       // check if document was found
       if(!requiredIssue){
@@ -98,7 +108,6 @@ module.exports = function (app) {
       let project = req.params.project;
       const {_id} = req.body;
       if(!_id){
-        console.log('Missing ID')
         return res.json({
           error: 'missing _id'
         });
@@ -112,7 +121,6 @@ module.exports = function (app) {
           });
         }
       } catch (error) {
-        console.log(error);
       };
       return res.json({
         error: 'could not delete',
